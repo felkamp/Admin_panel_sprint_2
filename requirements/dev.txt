@@ -1,0 +1,4 @@
+-r base.txt
+django-debug-toolbar==2.2
+factory_boy==3.2.0
+progress==1.6
