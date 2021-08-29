@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,12 +17,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "movies",
+    "debug_toolbar",
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -89,3 +94,32 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "filters": {
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        }
+    },
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]",
+        },
+    },
+    "handlers": {
+        "debug-console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+            "filters": ["require_debug_true"],
+        },
+    },
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["debug-console"],
+            "propagate": False,
+        }
+    },
+}
