@@ -12,12 +12,12 @@ class MoviesApiMixin:
     http_method_names = ["get"]
 
     def get_queryset(self):
-        persons_subquery = (
+        persons = (
             PersonFilmWork.objects.values("film_work_id", "role")
-            .annotate(persons_list=ArrayAgg("person__full_name"))
+            .annotate(persons=ArrayAgg("person__full_name"))
             .filter(film_work_id=OuterRef("pk"))
         )
-        genres_subquery = (
+        genres = (
             FilmWork.objects.values("id")
             .annotate(genres=ArrayAgg("genres__name"))
             .filter(id=OuterRef("pk"))
@@ -25,35 +25,10 @@ class MoviesApiMixin:
         return (
             FilmWork.objects.all()
             .values("id", "title", "description", "creation_date", "rating", "type")
-            .annotate(genres=Subquery(genres_subquery.values("genres")))
-            .annotate(
-                actors=Coalesce(
-                    Subquery(
-                        persons_subquery.filter(role=Role.ACTOR).values("persons_list")
-                    ),
-                    Value([]),
-                )
-            )
-            .annotate(
-                directors=Coalesce(
-                    Subquery(
-                        persons_subquery.filter(role=Role.PRODUCER).values(
-                            "persons_list"
-                        )
-                    ),
-                    Value([]),
-                )
-            )
-            .annotate(
-                writers=Coalesce(
-                    Subquery(
-                        persons_subquery.filter(role=Role.SCREENWRITER).values(
-                            "persons_list"
-                        )
-                    ),
-                    Value([]),
-                )
-            )
+            .annotate(genres=Subquery(genres.values("genres")))
+            .annotate(actors=Coalesce(Subquery(persons.filter(role=Role.ACTOR).values("persons")), Value([])))
+            .annotate(directors=Coalesce(Subquery(persons.filter(role=Role.PRODUCER).values("persons")), Value([])))
+            .annotate(writers=Coalesce(Subquery(persons.filter(role=Role.SCREENWRITER).values("persons")), Value([])))
             .order_by("id")
         )
 
