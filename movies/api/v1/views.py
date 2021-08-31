@@ -33,10 +33,8 @@ class MoviesApiMixin:
             .order_by("id")
         )
 
-    def render_to_response(self, context):
-        return JsonResponse(
-            context, json_dumps_params={"ensure_ascii": False, "indent": 4}
-        )
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(context)
 
 
 class MoviesListApi(MoviesApiMixin, BaseListView):
@@ -53,7 +51,7 @@ class MoviesListApi(MoviesApiMixin, BaseListView):
             "total_pages": paginator.num_pages,
             "prev": page.previous_page_number() if page.has_previous() else None,
             "next": page.next_page_number() if page.has_next() else None,
-            "results": list(queryset.values()),
+            "results": list(page.object_list),
         }
         return context
 
