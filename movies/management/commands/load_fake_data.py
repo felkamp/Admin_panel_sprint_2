@@ -1,12 +1,15 @@
 import logging
-from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from django.db import transaction
-from movies.factories import GenreFactory, PersonFactory, FilmWorkFactory, UserFactory
-from movies.models import Genre, FilmWork, Person, FilmWorkType, Role
 from math import ceil
+from random import choice, randint, sample
+
+from django.contrib.auth.models import User
+from django.core.management.base import BaseCommand
+from django.db import transaction
 from progress.bar import IncrementalBar
-from random import randint, choice, sample
+
+from movies.factories import (FilmWorkFactory, GenreFactory, PersonFactory,
+                              UserFactory)
+from movies.models import FilmWork, FilmWorkType, Genre, Person, Role
 
 USERS_COUNT = 1000
 PERSONS_COUNT = 10000

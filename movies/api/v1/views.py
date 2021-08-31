@@ -1,10 +1,11 @@
 from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import OuterRef, Subquery, Value
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from django.views.generic.detail import BaseDetailView
 from django.views.generic.list import BaseListView
-from django.db.models import OuterRef, Subquery, Value
-from django.db.models.functions import Coalesce
-from movies.models import FilmWork, Role, PersonFilmWork
+
+from movies.models import FilmWork, PersonFilmWork, Role
 
 
 class MoviesApiMixin:

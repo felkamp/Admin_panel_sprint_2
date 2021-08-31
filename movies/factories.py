@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from factory import Faker, Sequence
-from factory.fuzzy import FuzzyFloat
 from factory.django import DjangoModelFactory
-from movies.models import Genre, FilmWork, Person, FilmWorkType
+from factory.fuzzy import FuzzyFloat
+
+from movies.models import FilmWork, FilmWorkType, Genre, Person
 
 
 class UserFactory(DjangoModelFactory):
